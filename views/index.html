@@ -1,0 +1,59 @@
+<html>
+<head>
+    <!-- Import style.css from public -->
+    <link rel="stylesheet" href="style.css" />
+    <Title>Simple Janky Blog Engine</Title>
+</head>
+<body>
+    <h1 class="titleContainer">Simple Janky Blog Engine</h1>
+
+    <div class="articleContainer">
+        <% for(let i=0; i < posts.length; i++) { %>
+            <article id="<%=i%>">
+                <p>
+                    <%= posts[i].body %>
+                </p>
+                <p class="blogNumber">Blog #<%=posts[i].blogNumber%>
+                </p>
+            </article>
+            <% } %>
+    </div>
+    <div class="buttonContainer">
+        <!-- form to post to /new route -->
+        <form class = "formContainer" action="/new" method="POST">
+            <input class="inputContainer" type="textarea" name="body" placeholder="Enter your blog here" />
+            <input type="textarea" hidden name="blogNumber" value="<%=posts.length%>">
+            <input class="myButton" type="submit" value="Post Blog" />
+        </form>
+        <!-- form to post to /delete route -->
+        <form class = "formContainer" action="/delete" method="POST">
+            <input class="inputContainer" type="textarea" name="blogNumber" placeholder="Enter blog number to delete" />
+            <input class="myButton" type="submit" value="Delete Blog" />
+        </form>
+        <!-- form to post to /update route -->
+        <form class = "formContainer" action="/update" method="POST">
+            <input class="inputContainer" type="textarea" name="blogNumber" id="blogNumber" onchange="getBlogToUpdate()"
+                placeholder="Enter blog number to update" />
+            <input class="inputContainer" type="textarea" name="body" id="blogUpdate"
+                placeholder="Enter blog update here" />
+            <input class="myButton" type="submit" value="Update Blog" />
+        </form>
+        <!-- form to post to /deleteAll route -->
+        <form class = "formContainer" action="/deleteAll" method="POST">
+            <input class="myButton" type="submit" value="Delete All" />
+        </form>
+    </div>
+</body>
+
+</html>
+
+<script>
+    function getBlogToUpdate() {
+        const files = JSON.parse(`<%- JSON.stringify(posts)%>`);
+        for (let i = 0; i < files.length; i++) {
+            if (files[i].blogNumber == document.getElementById("blogNumber").value) {
+                document.getElementById("blogUpdate").value = files[i].body;
+            }
+        }
+    }
+</script>
